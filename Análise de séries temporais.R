@@ -31,18 +31,13 @@
 # 1. Carregando dados e criando series temporais; 
   # devido aos diferentes períodos disponiveis para os dados, foram criadas quatro variáveis
   dados1 = read_excel("Séries temporais.xlsx", sheet = 1, range = NULL) # A partir de 1965
-  dados2 = read_excel("Séries temporais.xlsx", sheet = 2, range = NULL) # A partir de 1966
-  dados3 = read_excel("Séries temporais.xlsx", sheet = 3, range = NULL) # A partir de 1970
-  dados4 = read_excel("Séries temporais.xlsx", sheet = 4, range = NULL) # A partir de 1971
+  dados2 = read_excel("Séries temporais.xlsx", sheet = 3, range = NULL) # A partir de 1970
 
   pibreal    = ts(dados1$PIBreal,    start = c(1965,1), end = c(2020,1), frequency = 1)
-  varpib     = ts(dados2$PIBTxVar,   start = c(1966,1), end = c(2020,1), frequency = 1)
   gerhidro   = ts(dados1$GerHidro,   start = c(1965,1), end = c(2020,1), frequency = 1)
   gertermo   = ts(dados1$GerTermo,   start = c(1965,1), end = c(2020,1), frequency = 1)
-  gertotal   = ts(dados3$GerTotal,   start = c(1970,1), end = c(2020,1), frequency = 1)
-  varpibagro = ts(dados4$PIBAgro,    start = c(1971,1), end = c(2020,1), frequency = 1)
-  varpibind  = ts(dados4$PIBInd,     start = c(1971,1), end = c(2020,1), frequency = 1)
-  varpibser  = ts(dados4$PIBServ,    start = c(1971,1), end = c(2020,1), frequency = 1)
+  gertotal   = ts(dados2$GerTotal,   start = c(1970,1), end = c(2020,1), frequency = 1)
+ 
 
   # 1.1. Diferenças
   difpibreal   = diff(pibreal, lag = 1, differences = 1)
@@ -57,56 +52,56 @@
   
   # 2.1. PIB real e primeira diferença
   ts.plot(pibreal, 
-          type = "l", lwd = "2", col = "2", 		
-          ylab= "R$ de Dezembro de 2020", xlab = "Ano", 
+          type = "l", lwd = "3", col = "2", 		
+          ylab= "R$ Tri de Dezembro de 2020", xlab = "Ano", 
           main= "PIB real de 1965 a 2020")
   
   ts.plot(difpibreal, 
-          type = "l", lwd = "2", col = "2", 		
-          ylab= "R$ de Dezembro de 2020", xlab = "Ano", 
-          main= "1ª diferença do PIB real de 1965 a 2020")
+          type = "l", lwd = "3", col = "2", 		
+          ylab= "R$ Tri de Dezembro de 2020", xlab = "Ano", 
+          main= "1ª diferença do PIB real de 1966 a 2020")
   abline(h = 0, lty = "dashed", col = "black", lwd = 1)
   
   # 2.2. Geracao hidreletrica e primeira diferenca
   ts.plot(gerhidro, 
-          type = "l", lwd = "2", col = "2", 		
+          type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
           main= "Geração hidrelétrica de 1965 a 2020")
   
   ts.plot(difgerhidro, 
-          type = "l", lwd = "2", col = "2", 		
+          type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
-          main= "1ª diferença da geração hidrelétrica de 1965 a 2020")
+          main= "1ª diferença da geração hidrelétrica de 1966 a 2020")
   abline(h = 0, lty = "dashed", col = "black", lwd = 1)
   
   # 2.3. Geracao termeletrica e primeira diferenca
   ts.plot(gertermo, 
-          type = "l", lwd = "2", col = "2", 		
+          type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
           main= "Geração termoelétrica de 1965 a 2020")
   
   ts.plot(difgertermo, 
-          type = "l", lwd = "2", col = "2", 		
+          type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
-          main= "1ª diferença da geração termoelétrica de 1965 a 2020")
+          main= "1ª diferença da geração termoelétrica de 1966 a 2020")
   abline(h = 0, lty = "dashed", col = "black", lwd = 1)
   
   # 2.4. Geracao eletrica total, primeira e segunda diferencas
   ts.plot(gertotal, 
-          type = "l", lwd = "2", col = "2", 		
+          type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
           main= "Geração elétrica total de 1970 a 2020")
   
   ts.plot(difgertotal, 
-          type = "l", lwd = "2", col = "2", 		
+          type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
-          main= "1ª diferença da geração elétrica total de 1970 a 2020")
-  abline(h = 0, lty = "dashed", col = "black", lwd = 1)
+          main= "1ª diferença da geração elétrica total de 1971 a 2020")
+  abline(h = 0, lty = "dashed", col = "black", lwd = 2)
   
   ts.plot(dif2gertotal, 
-          type = "l", lwd = "2", col = "2", 		
+          type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
-          main= "2ª diferença da geração elétrica total de 1970 a 2020")
+          main= "2ª diferença da geração elétrica total de 1972 a 2020")
   abline(h = 0, lty = "dashed", col = "black", lwd = 1)
 
 
@@ -172,20 +167,27 @@
   
   
 
-# 6. Estimando modelos VAR 
+# 6. Testes de causalidade de Granger
+  grangertest(difgerhidro, difpibreal, order = 10)
+  grangertest(difgertermo, difpibreal, order = 10)
+  grangertest(difgertotal, difpibreal, order = 10)
   
-  # 6.1. Preparando dados 
+
+
+# 7. Estimando modelos VAR 
+  
+  # 7.1. Preparando dados 
     dadosVAR1 = ts.union(difpibreal, difgerhidro)
     dadosVAR2 = ts.union(difpibreal, difgertermo)
     difpibreal1971 = window(difpibreal, start = 1971)
     dadosVAR3 = ts.union(difpibreal1971, difgertotal)
     
-  # 6.2. Selecionando numero adequado de defasagens
+  # 7.2. Selecionando numero adequado de defasagens
     VARselect(dadosVAR1, lag.max = 10, type = "const")
     VARselect(dadosVAR2, lag.max = 10, type = "const")
     VARselect(dadosVAR3, lag.max = 10, type = "const")
     
-  # 6.3. Estimando modelos  
+  # 7.3. Estimando modelos  
     modelo1 = VAR(dadosVAR1, p = 1, type = "both")
     modelo2 = VAR(dadosVAR2, p = 1, type = "both")
     modelo3 = VAR(dadosVAR3, p = 1, type = "both")
@@ -197,11 +199,3 @@
     summary(modelo1, equation = "difpibreal")
     summary(modelo2, equation = "difpibreal")
     summary(modelo3, equation = "difpibreal")
-  
-  
-  
-# 7. Testes de causalidade de Granger
-  grangertest(difgerhidro, difpibreal, order = 10)
-  grangertest(difgertermo, difpibreal, order = 10)
-  grangertest(difgertotal, difpibreal, order = 10)
-  
