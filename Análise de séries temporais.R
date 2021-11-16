@@ -31,7 +31,7 @@
 # 1. Carregando dados e criando series temporais; 
   # devido aos diferentes períodos disponiveis para os dados, foram criadas quatro variáveis
   dados1 = read_excel("Séries temporais.xlsx", sheet = 1, range = NULL) # A partir de 1965
-  dados2 = read_excel("Séries temporais.xlsx", sheet = 3, range = NULL) # A partir de 1970
+  dados2 = read_excel("Séries temporais.xlsx", sheet = 2, range = NULL) # A partir de 1970
 
   pibreal    = ts(dados1$PIBreal,    start = c(1965,1), end = c(2020,1), frequency = 1)
   gerhidro   = ts(dados1$GerHidro,   start = c(1965,1), end = c(2020,1), frequency = 1)
