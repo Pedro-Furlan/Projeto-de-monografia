@@ -24,12 +24,12 @@
   library(lmtest)
 
  # 0.2. Definindo diretorio de trabalho
-  setwd("/home/pedro/Documents/Economia/MONOGRAFIA/Dados")
+  setwd("/home/pedro/Documents/Economia/Monografia/Dados")
 
   
 
 # 1. Carregando dados e criando series temporais; 
-  # devido aos diferentes períodos disponiveis para os dados, foram criadas quatro variáveis
+  # devido aos diferentes períodos disponiveis para os dados, foram criadas duas variáveis
   dados1 = read_excel("Séries temporais.xlsx", sheet = 1, range = NULL) # A partir de 1965
   dados2 = read_excel("Séries temporais.xlsx", sheet = 2, range = NULL) # A partir de 1970
 
@@ -179,8 +179,8 @@
   dif2pibreal1972 = window(dif2pibreal, start = 1972)
   
   # 6.1. Preparando dados 
-  dadosVAR1 = ts.union(dif2pibreal, difgerhidro1967)  # PIB x Geração hidrelétrica
-  dadosVAR2 = ts.union(dif2pibreal, difgertermo1967)  # PIB x Geração termelétrica
+  dadosVAR1 = ts.union(dif2pibreal,  difgerhidro1967)  # PIB x Geração hidrelétrica
+  dadosVAR2 = ts.union(dif2pibreal,  difgertermo1967)  # PIB x Geração termelétrica
   dadosVAR3 = ts.union(dif2pibreal1972, dif2gertotal) # PIB x Geração elétrica total
   
   # 6.2. Selecionando numero adequado de defasagens
@@ -202,9 +202,10 @@
   summary(modelo3, equation = "dif2pibreal1972")  
 
   # 6.4. Testando para autocorrelação dos resíduos
-  dwtest(modelo1$varresult$dif2pibreal, alternative = "two.sided")
-  dwtest(modelo2$varresult$dif2pibreal, alternative = "two.sided")
+  dwtest(modelo1$varresult$dif2pibreal,     alternative = "two.sided")
+  dwtest(modelo2$varresult$dif2pibreal,     alternative = "two.sided")
   dwtest(modelo3$varresult$dif2pibreal1972, alternative = "two.sided")
+  
   
   
 # 7. Testes de causalidade de Granger
