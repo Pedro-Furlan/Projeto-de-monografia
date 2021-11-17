@@ -169,26 +169,41 @@
   adf.test(dif2pibreal)
   adf.test(dif2gertotal)
   
-
-
-  # 6. Estimando modelos VAR 
   
-  # 6.0. Realizando corte de variáveis, para garantir sua compatibilidade
+  
+# 6. Testes de causalidade de Granger
+  grangertest(difgerhidro1967, dif2pibreal, order = 1) # Teste para uma única defasagem
+  grangertest(difgertermo1967, dif2pibreal, order = 1)
+  grangertest(dif2gertotal, dif2pibreal1972, order = 1)
+  
+  grangertest(difgerhidro1967, dif2pibreal, order = 5) # Teste para cinco defasagens
+  grangertest(difgertermo1967, dif2pibreal, order = 5)
+  grangertest(dif2gertotal, dif2pibreal1972, order = 5)
+  
+  grangertest(difgerhidro1967, dif2pibreal, order = 10) # Teste para dez defasagens
+  grangertest(difgertermo1967, dif2pibreal, order = 10)
+  grangertest(dif2gertotal, dif2pibreal1972, order = 10)
+
+  
+  
+# 7. Estimando modelos VAR 
+  
+  # 7.0. Realizando corte de variáveis, para garantir sua compatibilidade
   difgerhidro1967 = window(difgerhidro, start = 1967)
   difgertermo1967 = window(difgertermo, start = 1967)
   dif2pibreal1972 = window(dif2pibreal, start = 1972)
   
-  # 6.1. Preparando dados 
+  # 7.1. Preparando dados 
   dadosVAR1 = ts.union(dif2pibreal, difgerhidro1967)  # PIB x Geração hidrelétrica
   dadosVAR2 = ts.union(dif2pibreal, difgertermo1967)  # PIB x Geração termelétrica
   dadosVAR3 = ts.union(dif2pibreal1972, dif2gertotal) # PIB x Geração elétrica total
   
-  # 6.2. Selecionando numero adequado de defasagens
+  # 7.2. Selecionando numero adequado de defasagens
   VARselect(dadosVAR1, lag.max = 10, type = "const", season = NULL, exogen = NULL)
   VARselect(dadosVAR2, lag.max = 10, type = "const", season = NULL, exogen = NULL)
   VARselect(dadosVAR3, lag.max = 10, type = "const", season = NULL, exogen = NULL)
   
-  # 6.3. Estimando modelos  
+  # 7.3. Estimando modelos  
   modelo1 = VAR(dadosVAR1, p = 1, type = "const", season = NULL, exogen = NULL)
   modelo2 = VAR(dadosVAR2, p = 1, type = "const", season = NULL, exogen = NULL)
   modelo3 = VAR(dadosVAR3, p = 1, type = "const", season = NULL, exogen = NULL)
@@ -201,22 +216,7 @@
   summary(modelo2, equation = "dif2pibreal")
   summary(modelo3, equation = "dif2pibreal1972")  
 
-  # 6.4. Testando para autocorrelação dos resíduos
-    dwtest(modelo1$varresult$dif2pibreal, alternative = "two.sided")
+  # 7.4. Testando para autocorrelação dos resíduos
+  dwtest(modelo1$varresult$dif2pibreal, alternative = "two.sided")
   dwtest(modelo2$varresult$dif2pibreal, alternative = "two.sided")
   dwtest(modelo3$varresult$dif2pibreal1972, alternative = "two.sided")
-
-  
-  
-# 7. Testes de causalidade de Granger
-  grangertest(difgerhidro1967, dif2pibreal, order = 1) # Teste para uma única defasagem
-  grangertest(difgertermo1967, dif2pibreal, order = 1)
-  grangertest(dif2gertotal, dif2pibreal1972, order = 1)
-  
-  grangertest(difgerhidro1967, dif2pibreal, order = 5) # Teste para cinco defasagens
-  grangertest(difgertermo1967, dif2pibreal, order = 5)
-  grangertest(dif2gertotal, dif2pibreal1972, order = 5)
-  
-  grangertest(difgerhidro1967, dif2pibreal, order = 10) # Teste para dez defasagens
-  grangertest(difgertermo1967, dif2pibreal, order = 10)
-  grangertest(dif2gertotal, dif2pibreal1972, order = 10)
