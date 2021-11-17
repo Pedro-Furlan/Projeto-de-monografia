@@ -41,16 +41,16 @@
 
   # 1.1. Diferenças
   difpibreal   = diff(pibreal, lag = 1, differences = 1)
+  dif2pibreal  = diff(pibreal, lag = 1, differences = 2)
   difgerhidro  = diff(gerhidro, lag = 1, differences = 1)
   difgertermo  = diff(gertermo, lag = 1, differences = 1)
   difgertotal  = diff(gertotal, lag = 1, differences = 1)
   dif2gertotal = diff(gertotal, lag = 1, differences = 2)
 
 
-
 # 2. Gerando graficos 
   
-  # 2.1. PIB real e primeira diferença
+  # 2.1. PIB real, primeira e segunda diferenças
   ts.plot(pibreal, 
           type = "l", lwd = "3", col = "2", 		
           ylab= "R$ Tri de Dezembro de 2020", xlab = "Ano", 
@@ -60,7 +60,13 @@
           type = "l", lwd = "3", col = "2", 		
           ylab= "R$ Tri de Dezembro de 2020", xlab = "Ano", 
           main= "1ª diferença do PIB real de 1966 a 2020")
-  abline(h = 0, lty = "dashed", col = "black", lwd = 1)
+  abline(h = mean(difpibreal), lty = "dashed", col = "black", lwd = 1)
+  
+  ts.plot(dif2pibreal, 
+          type = "l", lwd = "3", col = "2", 		
+          ylab= "R$ Tri de Dezembro de 2020", xlab = "Ano", 
+          main= "2ª diferença do PIB real de 1967 a 2020")
+  abline(h = mean(dif2pibreal), lty = "dashed", col = "black", lwd = 1)
   
   # 2.2. Geracao hidreletrica e primeira diferenca
   ts.plot(gerhidro, 
@@ -72,7 +78,7 @@
           type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
           main= "1ª diferença da geração hidrelétrica de 1966 a 2020")
-  abline(h = 0, lty = "dashed", col = "black", lwd = 1)
+  abline(h = mean(difgerhidro), lty = "dashed", col = "black", lwd = 1)
   
   # 2.3. Geracao termeletrica e primeira diferenca
   ts.plot(gertermo, 
@@ -84,7 +90,7 @@
           type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
           main= "1ª diferença da geração termoelétrica de 1966 a 2020")
-  abline(h = 0, lty = "dashed", col = "black", lwd = 1)
+  abline(h = mean(difgertermo), lty = "dashed", col = "black", lwd = 1)
   
   # 2.4. Geracao eletrica total, primeira e segunda diferencas
   ts.plot(gertotal, 
@@ -96,13 +102,13 @@
           type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
           main= "1ª diferença da geração elétrica total de 1971 a 2020")
-  abline(h = 0, lty = "dashed", col = "black", lwd = 2)
+  abline(h = mean(difgertotal), lty = "dashed", col = "black", lwd = 2)
   
   ts.plot(dif2gertotal, 
           type = "l", lwd = "3", col = "2", 		
           ylab= "TWh", xlab = "Ano", 
           main= "2ª diferença da geração elétrica total de 1972 a 2020")
-  abline(h = 0, lty = "dashed", col = "black", lwd = 1)
+  abline(h = mean(dif2gertotal), lty = "dashed", col = "black", lwd = 1)
 
 
 
@@ -155,47 +161,62 @@
   
   
 # 5. Aplicando o teste de Dickey-Fuller para raízes unitárias
-  adf.test(pibreal)
-  adf.test(gerhidro)
-  adf.test(gertermo)
-  adf.test(gertotal)
-  
   adf.test(difpibreal)
   adf.test(difgerhidro)
   adf.test(difgertermo)
   adf.test(difgertotal)
   
-  
-
-# 6. Testes de causalidade de Granger
-  grangertest(difgerhidro, difpibreal, order = 10)
-  grangertest(difgertermo, difpibreal, order = 10)
-  grangertest(difgertotal, difpibreal, order = 10)
+  adf.test(dif2pibreal)
+  adf.test(dif2gertotal)
   
 
 
-# 7. Estimando modelos VAR 
+  # 6. Estimando modelos VAR 
   
-  # 7.1. Preparando dados 
-    dadosVAR1 = ts.union(difpibreal, difgerhidro)
-    dadosVAR2 = ts.union(difpibreal, difgertermo)
-    difpibreal1971 = window(difpibreal, start = 1971)
-    dadosVAR3 = ts.union(difpibreal1971, difgertotal)
-    
-  # 7.2. Selecionando numero adequado de defasagens
-    VARselect(dadosVAR1, lag.max = 10, type = "const")
-    VARselect(dadosVAR2, lag.max = 10, type = "const")
-    VARselect(dadosVAR3, lag.max = 10, type = "const")
-    
-  # 7.3. Estimando modelos  
-    modelo1 = VAR(dadosVAR1, p = 1, type = "both")
-    modelo2 = VAR(dadosVAR2, p = 1, type = "both")
-    modelo3 = VAR(dadosVAR3, p = 1, type = "both")
-    
-    modelo1
-    modelo2
-    modelo3
-    
-    summary(modelo1, equation = "difpibreal")
-    summary(modelo2, equation = "difpibreal")
-    summary(modelo3, equation = "difpibreal")
+  # 6.0. Realizando corte de variáveis, para garantir sua compatibilidade
+  difgerhidro1967 = window(difgerhidro, start = 1967)
+  difgertermo1967 = window(difgertermo, start = 1967)
+  dif2pibreal1972 = window(dif2pibreal, start = 1972)
+  
+  # 6.1. Preparando dados 
+  dadosVAR1 = ts.union(dif2pibreal, difgerhidro1967)  # PIB x Geração hidrelétrica
+  dadosVAR2 = ts.union(dif2pibreal, difgertermo1967)  # PIB x Geração termelétrica
+  dadosVAR3 = ts.union(dif2pibreal1972, dif2gertotal) # PIB x Geração elétrica total
+  
+  # 6.2. Selecionando numero adequado de defasagens
+  VARselect(dadosVAR1, lag.max = 10, type = "const", season = NULL, exogen = NULL)
+  VARselect(dadosVAR2, lag.max = 10, type = "const", season = NULL, exogen = NULL)
+  VARselect(dadosVAR3, lag.max = 10, type = "const", season = NULL, exogen = NULL)
+  
+  # 6.3. Estimando modelos  
+  modelo1 = VAR(dadosVAR1, p = 1, type = "const", season = NULL, exogen = NULL)
+  modelo2 = VAR(dadosVAR2, p = 1, type = "const", season = NULL, exogen = NULL)
+  modelo3 = VAR(dadosVAR3, p = 1, type = "const", season = NULL, exogen = NULL)
+  
+  modelo1
+  modelo2
+  modelo3
+  
+  summary(modelo1, equation = "dif2pibreal")
+  summary(modelo2, equation = "dif2pibreal")
+  summary(modelo3, equation = "dif2pibreal1972")  
+
+  # 6.4. Testando para autocorrelação dos resíduos
+    dwtest(modelo1$varresult$dif2pibreal, alternative = "two.sided")
+  dwtest(modelo2$varresult$dif2pibreal, alternative = "two.sided")
+  dwtest(modelo3$varresult$dif2pibreal1972, alternative = "two.sided")
+
+  
+  
+# 7. Testes de causalidade de Granger
+  grangertest(difgerhidro1967, dif2pibreal, order = 1) # Teste para uma única defasagem
+  grangertest(difgertermo1967, dif2pibreal, order = 1)
+  grangertest(dif2gertotal, dif2pibreal1972, order = 1)
+  
+  grangertest(difgerhidro1967, dif2pibreal, order = 5) # Teste para cinco defasagens
+  grangertest(difgertermo1967, dif2pibreal, order = 5)
+  grangertest(dif2gertotal, dif2pibreal1972, order = 5)
+  
+  grangertest(difgerhidro1967, dif2pibreal, order = 10) # Teste para dez defasagens
+  grangertest(difgertermo1967, dif2pibreal, order = 10)
+  grangertest(dif2gertotal, dif2pibreal1972, order = 10)
